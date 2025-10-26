@@ -44,3 +44,4 @@ yarn-error.*
 data
 __pycache__
 cache
+.env

@@ -2,3 +2,9 @@ requests
 beautifulsoup4
 httpx
 httpx[http2]
+chromadb 
+llama-index
+llama-index-vector-stores-chroma
+llama-index-embeddings-openai
+llama-index-llms-openai
+openai

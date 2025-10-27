@@ -8,8 +8,8 @@ def _sha1(s: str) -> str:
 
 def pages_to_documents(pages: List[Dict[str, Any]]) -> List[Document]:
     """
-    Turn cached page JSON (from DiskCache) into LlamaIndex Documents.
-    One Document per section (title + text), with rich metadata.
+    Turns cached page JSON into LlamaIndex Documents.
+    One Document per section (title & text), with metadata.
     """
     out: List[Document] = []
     for p in pages:

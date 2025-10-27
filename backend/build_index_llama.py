@@ -1,22 +1,16 @@
-# backend/build_index_llama.py
 from __future__ import annotations
 import sys, json
 from pathlib import Path
-from typing import Dict, Any, Iterable, List
-
+from typing import Dict, Any, Iterable
 import chromadb
-
 from llama_index.core import StorageContext, VectorStoreIndex
 from llama_index.core.ingestion import IngestionPipeline
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
-
 from settings import settings
 from rag.cache import DiskCache
 from rag.documents import pages_to_documents
-
-# -------------------- small helpers --------------------
 
 def load_index_state(path: Path) -> Dict[str, str]:
     if not path.exists():
@@ -40,11 +34,9 @@ def pages_needing_index(cache: DiskCache, state: Dict[str, str]) -> Iterable[Dic
             continue
         yield page
 
-# -------------------- main --------------------
-
 def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
     if not settings.google_api_key:
-        print("ERROR: GEMINI_API_KEY / GOOGLE_API_KEY is not set in your environment.")
+        print("ERROR: GEMINI_API_KEY is not set in your environment.")
         return 2
 
     cache = DiskCache(Path("cache"))
@@ -58,11 +50,11 @@ def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
 
     print(f"Pages to index: {len(pages)}")
 
-    # Convert cached pages -> LlamaIndex Documents (one per section)
+    # Converts cached pages into LlamaIndex Documents (one per section)
     documents = pages_to_documents(pages)
     print(f"Prepared {len(documents)} documents (one per section).")
 
-    # LlamaIndex chunking (character-ish splitting)
+    # Chunking
     splitter = SentenceSplitter(
         separator=" ",
         chunk_size=settings.chunk_max_chars,
@@ -77,7 +69,7 @@ def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
     )
     print(f"Produced {len(nodes)} nodes (chunks).")
 
-    # Chroma client — IMPORTANT: do NOT pass an embedding_function (Approach B).
+    # Establish Chroma client
     client = chromadb.PersistentClient(path=str(settings.chroma_path))
 
     colname = collection_name or settings.chroma_collection
@@ -87,14 +79,14 @@ def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
     vector_store = ChromaVectorStore(chroma_collection=chroma_col)
     storage_context = StorageContext.from_defaults(vector_store=vector_store)
 
-    # Use the official LlamaIndex Google GenAI embedding wrapper
+    # Use the Google GenAI embedding wrapper
     embed_model = GoogleGenAIEmbedding(
-        model_name=settings.gemini_embedding_model,   # e.g., "text-embedding-004"
-        api_key=settings.google_api_key,              # or set GOOGLE_API_KEY in env
-        embed_batch_size=settings.embed_batch_size,   # from your .env
+        model_name=settings.gemini_embedding_model,
+        api_key=settings.google_api_key,
+        embed_batch_size=settings.embed_batch_size,
     )
 
-    # Build index: LlamaIndex computes embeddings & upserts to Chroma
+    # Build index
     _ = VectorStoreIndex(
         nodes=nodes,
         storage_context=storage_context,
@@ -103,7 +95,7 @@ def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
     )
     print(f"Upserted {len(nodes)} vectors into Chroma collection '{colname}' at '{settings.chroma_path}'.")
 
-    # Update state.json to mark these pages as indexed
+    # Updates state.json to mark these pages as indexed
     for p in pages:
         state[p["url"]] = p["content_sha1"]
     save_index_state(state_path, state)
@@ -112,7 +104,6 @@ def main(reindex_all: bool = False, collection_name: str | None = None) -> int:
 
 if __name__ == "__main__":
     reindex = "--reindex-all" in sys.argv
-    # Optional: allow --collection NEW_NAME to avoid mixing with your old collection
     try:
         col_flag = "--collection"
         coll = None

@@ -10,7 +10,7 @@ load_dotenv()
 class AppSettings:
     # Chroma vector store setup
     chroma_path: Path = Path("vectorstore")
-    chroma_collection: str = "qc_commencement_v1"
+    chroma_collection: str = "qc_commencement_llama_v1"
     # Google Gemini (embeddings & chat) setup
     google_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_embedding_model: str = os.getenv("GEMINI_EMBED_MODEL")

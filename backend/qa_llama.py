@@ -1,11 +1,8 @@
-# backend/qa_llama.py
 from __future__ import annotations
 import sys
 from typing import List
-
 import chromadb
 import google.generativeai as genai
-
 from llama_index.core import VectorStoreIndex, Settings
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding
@@ -23,17 +20,17 @@ def build_prompt(query: str, contexts: List[str]) -> str:
 
 def run_query(prompt: str, top_k: int = 6, collection_name: str | None = None):
     if not settings.google_api_key:
-        print("ERROR: GEMINI_API_KEY / GOOGLE_API_KEY is not set.")
+        print("ERROR: GEMINI_API_KEY is not set.")
         raise SystemExit(2)
 
-    # Connect to existing Chroma collection (no embedding_function configured on Chroma)
+    # Connects to existing Chroma collection
     client = chromadb.PersistentClient(path=str(settings.chroma_path))
     col = client.get_or_create_collection(name=collection_name or settings.chroma_collection)
 
-    # LlamaIndex: read from vector store and use Gemini embeddings for the query
+    # Reads from vector store and uses Gemini embeddings for the query
     vector_store = ChromaVectorStore(chroma_collection=col)
     Settings.embed_model = GoogleGenAIEmbedding(
-        model_name=settings.gemini_embedding_model,   # e.g. "text-embedding-004"
+        model_name=settings.gemini_embedding_model,
         api_key=settings.google_api_key,
         embed_batch_size=settings.embed_batch_size,
     )
@@ -52,7 +49,7 @@ def run_query(prompt: str, top_k: int = 6, collection_name: str | None = None):
             txt = txt[:1200] + " …"
         contexts.append(txt)
 
-    # Generate with Gemini chat (direct)
+    # Generate with Gemini chat
     genai.configure(api_key=settings.google_api_key)
     model = genai.GenerativeModel(settings.gemini_chat_model)
     resp = model.generate_content(build_prompt(prompt, contexts))

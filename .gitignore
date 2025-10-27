@@ -45,3 +45,4 @@ data
 __pycache__
 cache
 .env
+vectorstore

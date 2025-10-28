@@ -1,15 +1,19 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 
-type Props = { title?: string; subtitle?: string; avatarLetter?: string };
+type Props = { title?: string; subtitle?: string };
 
 export default function HeroEmptyState({
-  title = "What can I help with?",
-  subtitle = "Ask me about ceremony details, parking, dining, or any other graduation questions.",
-  avatarLetter = "Q",
+  title = "What can I help you with?",
+  subtitle = "Ask me about ceremony details, parking, or any other graduation questions.",
 }: Props) {
   return (
     <View style={styles.hero}>
-      <View style={styles.avatar}><Text style={styles.avatarLetter}>{avatarLetter}</Text></View>
+      <Image
+        source={require("../../assets/images/qc-logo.png")}
+        style={styles.logo}
+        accessibilityLabel="Queens College"
+        accessibilityIgnoresInvertColors
+      />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
     </View>
@@ -18,8 +22,11 @@ export default function HeroEmptyState({
 
 const styles = StyleSheet.create({
   hero: { alignItems: "center", gap: 12 },
-  avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: "#c44536", alignItems: "center", justifyContent: "center" },
-  avatarLetter: { color: "#fff", fontSize: 36, fontWeight: "700" },
-  title: { fontSize: 20, fontWeight: "800", marginTop: 12 },
+  logo: {
+    width: 200,
+    height: 100,
+    resizeMode: "contain",
+  },
+  title: { fontSize: 20, fontWeight: "800", marginTop: 4 },
   subtitle: { textAlign: "center", color: "#666", paddingHorizontal: 12 },
 });

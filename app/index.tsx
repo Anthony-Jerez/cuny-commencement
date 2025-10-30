@@ -10,24 +10,29 @@ const API_BASE = process.env.EXPO_PUBLIC_API_BASE;
 
 export default function ChatScreen() {
   const [messages, setMessages] = useState<Msg[]>([
-    { id: uid(), role: "assistant", content: STARTER_ASSISTANT_TEXT },
+    { id: uid(), role: "assistant", content: STARTER_ASSISTANT_TEXT, createdAt: Date.now() },
   ]);
   const [input, setInput] = useState("");
   const sending = useRef(false);
 
-  const hasStarted = messages.length > 1; // hide the seed message & show empty state message until first user message
+  const hasStarted = messages.length > 1;
 
   const send = async () => {
     const text = input.trim();
     if (!text || sending.current) return;
 
     sending.current = true;
-    const userMsg: Msg = { id: uid(), role: "user", content: text };
-    setMessages((prev) => [...prev, userMsg]);
+
+    const userMsg: Msg = { id: uid(), role: "user", content: text, createdAt: Date.now() };
+    const pendingId = uid();
+    const pending: Msg = { id: pendingId, role: "assistant", content: "", loading: true };
+
+    setMessages((prev) => [...prev, userMsg, pending]);
     setInput("");
 
     try {
-      const history = [...messages.slice(-10), userMsg].map((m) => ({
+      // Build brief history (exclude starter + pending)
+      const history = [...messages.filter(m => !m.loading).slice(-10), userMsg].map((m) => ({
         role: m.role,
         content: m.content,
       }));
@@ -35,21 +40,37 @@ export default function ChatScreen() {
       const res = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history }),
+        body: JSON.stringify({
+          message: text,
+          history,
+          top_k: 6,
+          // collection: "qc_commencement_llama_v1", // uncomment if you want to target that collection
+        }),
       });
 
-      const ok = res.ok;
-      const data = ok ? await res.json() : null;
-      const reply =
-        (data?.reply as string | undefined) ??
-        (ok ? "Sorry, I'm not sure." : "Network error—please try again.");
+      let reply = "Sorry, I'm not sure.";
+      let sources: Msg["sources"] = [];
+      if (res.ok) {
+        const data = await res.json();
+        reply = data?.reply ?? reply;
+        sources = data?.sources ?? [];
+      } else {
+        reply = "Network error—please try again.";
+      }
 
-      setMessages((prev) => [...prev, { id: uid(), role: "assistant", content: reply }]);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === pendingId ? { ...m, loading: false, content: reply, sources, createdAt: Date.now() } : m
+        )
+      );
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { id: uid(), role: "assistant", content: "Network error—please try again." },
-      ]);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === pendingId
+            ? { ...m, loading: false, content: "Network error—please try again.", createdAt: Date.now() }
+            : m
+        )
+      );
     } finally {
       sending.current = false;
     }

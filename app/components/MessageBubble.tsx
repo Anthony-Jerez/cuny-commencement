@@ -1,14 +1,23 @@
 import { memo } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { Msg } from "@/app/types/chat";
+import TypingBubble from "./TypingBubble";
+import AnswerBubble from "./AnswerBubble";
 
 type Props = { item: Msg };
 
 function MessageBubbleBase({ item }: Props) {
   const isAssistant = item.role === "assistant";
+
+  if (isAssistant && item.loading) return <TypingBubble />;
+
+  if (isAssistant) {
+    return <AnswerBubble content={item.content} sources={item.sources} ts={item.createdAt} />;
+  }
+
   return (
-    <View style={[styles.bubble, isAssistant ? styles.bot : styles.user]}>
-      <Text style={styles.msgText}>{item.content}</Text>
+    <View style={styles.userPill}>
+      <Text style={styles.userText}>{item.content}</Text>
     </View>
   );
 }
@@ -16,11 +25,15 @@ function MessageBubbleBase({ item }: Props) {
 export default memo(MessageBubbleBase);
 
 const styles = StyleSheet.create({
-  bubble: {
-    padding: 12, borderRadius: 16, marginVertical: 6, maxWidth: "85%",
-    alignSelf: "flex-start", backgroundColor: "#f2f2f2", marginHorizontal: 12
+  userPill: {
+    alignSelf: "center",
+    maxWidth: "90%",
+    marginVertical: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 24,
+    backgroundColor: "#d9534f",
+    marginHorizontal: 12,
   },
-  user: { alignSelf: "flex-end", backgroundColor: "#e9eefc" },
-  bot: { alignSelf: "flex-start", backgroundColor: "#f2f2f2" },
-  msgText: { fontSize: 16 },
+  userText: { color: "#fff", fontWeight: "600", fontSize: 16, lineHeight: 20 },
 });

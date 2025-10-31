@@ -4,6 +4,7 @@ import Markdown from "@ronradtke/react-native-markdown-display";
 import * as Clipboard from "expo-clipboard";
 import CitationsCard from "./CitationsCard";
 import type { Citation } from "@/app/types/chat";
+import { colors } from "@/app/theme/colors";
 
 type Props = {
   content: string;
@@ -89,7 +90,7 @@ const md = StyleSheet.create({
   bullet_list: { marginTop: 2, marginBottom: 8 },
   ordered_list: { marginTop: 2, marginBottom: 8 },
   list_item: { marginBottom: 4 },
-  link: { color: "#c44536", textDecorationLine: "underline", fontWeight: "600" },
+  link: { color: colors.qcRed, textDecorationLine: "underline", fontWeight: "600" },
   blockquote: {
     borderLeftWidth: 3,
     borderLeftColor: "#f4c9c6",

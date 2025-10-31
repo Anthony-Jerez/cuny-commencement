@@ -1,5 +1,6 @@
 import { View, Text, Linking, Pressable, StyleSheet } from "react-native";
 import type { Citation } from "@/app/types/chat";
+import { colors } from "@/app/theme/colors";
 
 type Props = { sources: Citation[] };
 
@@ -40,5 +41,5 @@ const styles = StyleSheet.create({
   },
   label: { color: "#444", marginBottom: 2 },
   bold: { fontWeight: "700" },
-  link: { color: "#c44536", textDecorationLine: "underline", fontWeight: "600" },
+  link: { color: colors.qcRed, textDecorationLine: "underline", fontWeight: "600" },
 });

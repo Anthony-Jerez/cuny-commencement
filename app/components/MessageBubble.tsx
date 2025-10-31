@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import type { Msg } from "@/app/types/chat";
 import TypingBubble from "./TypingBubble";
 import AnswerBubble from "./AnswerBubble";
+import { colors } from "@/app/theme/colors";
 
 type Props = { item: Msg };
 
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 24,
-    backgroundColor: "#d9534f",
+    backgroundColor: colors.userPill,
     marginHorizontal: 12,
   },
   userText: { color: "#fff", fontWeight: "600", fontSize: 16, lineHeight: 20 },

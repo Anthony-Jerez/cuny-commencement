@@ -41,7 +41,7 @@ The app scrapes official info, indexes it, and lets users chat with a AI assista
 - Chroma (vector store)
 
 ## Video Demo
-[Watch the full video demo here](https://youtube.com/shorts/WxkxQa_Q7DE?feature=share)
+[![Watch the full video demo here](https://img.youtube.com/vi/WxkxQa_Q7DE/0.jpg)](https://youtube.com/shorts/WxkxQa_Q7DE?feature=share)
 
 ## How it Works
 1. Scrape & Cache: Async scraper fetches content from official pages and caches it on disk to avoid re-fetching unchanged content.

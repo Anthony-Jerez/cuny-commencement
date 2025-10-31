@@ -1,6 +1,6 @@
 # CUNY QC Commencement AI Assistant
 
-"My family won't see me graduate unless they know where to be, when to arrive, and what to bring." These are the statements that I would often hear from graduates as commencement approached. Instead of letting their parents get peppered with questions all weekend, I built a app for them, that answers everything that has to do with graduation/commencement.
+"My family won't see me graduate unless they know where to be, when to arrive, and what to bring." These are the statements that I would often hear from graduates as commencement approached. Instead of letting their parents get consumed with questions all weekend, I built a app for them, that answers any question that might come to mind regarding graduation/commencement.
 
 ## Description
 The app scrapes official info, indexes it, and lets users chat with a AI assistant that leverages RAG to get fast, grounded answers. It supports Clerk auth (Email & Google), persists conversations in SQLite, and cites sources to ensure accuracy.

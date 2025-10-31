@@ -11,7 +11,7 @@ The app scrapes official info, indexes it, and lets users chat with a AI assista
 - Fetches commencement details (dates, tickets, parking, venue rules, etc.) from official QC web pages.
 - HTML parsing with Beautiful Soup.
 - Uses asyncio to run requests concurrently.
-- Disk caching to avoid re-downloading; cleaning & deduping.
+- Disk caching to avoid re-fetching unchanged content; cleaning & deduping.
 2. RAG Agent 
 - Answers come from Gemini LLM augmented by retrieved source chunks.
 - LlamaIndex for chunking/embeddings/orchestration.

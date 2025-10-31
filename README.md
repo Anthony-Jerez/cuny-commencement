@@ -1,4 +1,4 @@
-# CUNY Commencement Q&A AI Assistant
+# CUNY QC Commencement AI Assistant
 
 "My family won't see me graduate unless they know where to be, when to arrive, and what to bring." These are the statements that I would often hear from graduates as commencement approached. Instead of letting their parents get peppered with questions all weekend, I built a app for them, that answers everything that has to do with graduation/commencement.
 

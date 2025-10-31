@@ -10,7 +10,7 @@ The app scrapes official info, indexes it, and lets users chat with a AI assista
 1. Asynchronous web scraper
 - Fetches commencement details (dates, tickets, parking, venue rules, etc.) from official QC web pages.
 - HTML parsing with Beautiful Soup.
-- Uses httpx & asyncio to run requests concurrently.
+- Uses asyncio to run requests concurrently.
 - Disk caching to avoid re-downloading; cleaning & deduping.
 2. RAG Agent 
 - Answers come from Gemini LLM augmented by retrieved source chunks.

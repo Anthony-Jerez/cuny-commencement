@@ -62,6 +62,7 @@ The app scrapes official info, indexes it, and lets users chat with a AI assista
 - Clerk project with Email/Password & Google enabled
 
 2. Backend
+
 From backend root:
 ```
 python -m venv .venv
@@ -91,6 +92,7 @@ uvicorn server:app --reload --port 8000
 ```
 
 3. Frontend
+
 From project root:
 ```
 npm install # or: pnpm install / yarn

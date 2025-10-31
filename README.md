@@ -36,7 +36,7 @@ The app scrapes official info, indexes it, and lets users chat with a AI assista
 #### Backend:
 - Python, FastAPI
 - Beautiful Soup (HTML parsing)
-- httpx + asyncio for async web scraping
+- asyncio for async web scraping
 - LlamaIndex (RAG pipeline)
 - Chroma (vector store)
 
